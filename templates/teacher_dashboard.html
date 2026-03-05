@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ teacher_name }}</h2>
+
+<nav class="tabs">
+    <button class="tab-btn active" data-tab="students">Students</button>
+    <button class="tab-btn" data-tab="attendance">Attendance</button>
+</nav>
+
+<section id="tab-students" class="tab-panel active">
+    <div class="grid two-col">
+        <article class="card">
+            <h3>Add Student</h3>
+            <form method="post" action="{{ url_for('add_student') }}" class="form-grid">
+                <label>Student ID <input type="text" name="student_id" required /></label>
+                <label>Student Name <input type="text" name="student_name" required /></label>
+                <label>Class <input type="text" name="student_class" required /></label>
+                <label>Email (Optional) <input type="email" name="email" /></label>
+                <button class="btn" type="submit">Add Student</button>
+            </form>
+        </article>
+
+        <article class="card">
+            <h3>Student List</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.student_id }}</td>
+                            <td>{{ student.student_name }}</td>
+                            <td>{{ student.student_class }}</td>
+                            <td>{{ student.email or '-' }}</td>
+                            <td>
+                                <form method="post" action="{{ url_for('delete_student', student_id=student.student_id) }}" onsubmit="return confirm('Delete this student?');">
+                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5">No students added yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section id="tab-attendance" class="tab-panel">
+    <div class="grid two-col">
+        <article class="card">
+            <h3>Mark Attendance</h3>
+            <form method="post" action="{{ url_for('add_attendance') }}" class="form-grid">
+                <label>
+                    Student
+                    <select name="student_id" required>
+                        <option value="">Select student</option>
+                        {% for student in students %}
+                        <option value="{{ student.student_id }}">{{ student.student_id }} - {{ student.student_name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Date
+                    <input type="date" name="date" required />
+                </label>
+                <label>
+                    Status
+                    <select name="status" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </label>
+                <button class="btn" type="submit">Save Attendance</button>
+            </form>
+        </article>
+
+        <article class="card">
+            <h3>Attendance History</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Teacher</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in attendance %}
+                        <tr>
+                            <td>{{ row.student_id }}</td>
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.status }}</td>
+                            <td>{{ row.teacher }}</td>
+                            <td class="actions-inline">
+                                <form method="post" action="{{ url_for('update_attendance', attendance_id=row._id) }}">
+                                    <select name="status" required>
+                                        <option value="Present" {% if row.status == 'Present' %}selected{% endif %}>Present</option>
+                                        <option value="Absent" {% if row.status == 'Absent' %}selected{% endif %}>Absent</option>
+                                    </select>
+                                    <button class="btn btn-sm" type="submit">Update</button>
+                                </form>
+                                <form method="post" action="{{ url_for('delete_attendance', attendance_id=row._id) }}" onsubmit="return confirm('Delete attendance record?');">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5">No attendance records found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

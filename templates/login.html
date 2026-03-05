@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Login | Student Management System{% endblock %}
+{% block content %}
+<section class="card login-card">
+    <h2>Login</h2>
+    <form action="{{ url_for('login') }}" method="post" class="form-grid">
+        <label>
+            Role
+            <select name="role" required>
+                <option value="">Select role</option>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
+            </select>
+        </label>
+        <label>
+            Username
+            <input type="text" name="username" placeholder="Enter username" required />
+        </label>
+        <label>
+            Password
+            <input type="password" name="password" placeholder="Enter password" required />
+        </label>
+        <button class="btn" type="submit">Sign In</button>
+    </form>
+    <p class="hint">Default Admin credentials: <strong>admin / admin@123</strong></p>
+</section>
+{% endblock %}
