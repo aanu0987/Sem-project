@@ -1,0 +1,55 @@
+<%- include('partials-header') %>
+
+<div class="grid two">
+  <section class="card">
+    <h2>Add Teacher</h2>
+    <% if (error) { %>
+    <p class="error"><%= error %></p>
+    <% } %>
+    <form method="POST" action="/admin/teachers">
+      <label>Teacher Name</label>
+      <input type="text" name="name" required />
+
+      <label>Username</label>
+      <input type="text" name="username" required />
+
+      <label>Password</label>
+      <input type="password" name="password" required />
+
+      <button class="btn" type="submit">Create Teacher</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Teachers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!teachers.length) { %>
+        <tr>
+          <td colspan="3">No teachers found.</td>
+        </tr>
+        <% } %>
+        <% teachers.forEach((teacher) => { %>
+        <tr>
+          <td><%= teacher.name %></td>
+          <td><%= teacher.username %></td>
+          <td>
+            <form method="POST" action="/admin/teachers/<%= teacher._id %>/delete" onsubmit="return confirm('Delete this teacher?')">
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<%- include('partials-footer') %>

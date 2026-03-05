@@ -1,0 +1,28 @@
+<%- include('partials-header') %>
+
+<div class="card auth-card">
+  <h2>Login</h2>
+  <p class="muted">Use default admin credentials: <strong>admin / admin@123</strong></p>
+
+  <% if (error) { %>
+  <p class="error"><%= error %></p>
+  <% } %>
+
+  <form method="POST" action="/login">
+    <label>Role</label>
+    <select name="role" required>
+      <option value="admin">Admin</option>
+      <option value="teacher">Teacher</option>
+    </select>
+
+    <label>Username</label>
+    <input type="text" name="username" required />
+
+    <label>Password</label>
+    <input type="password" name="password" required />
+
+    <button type="submit" class="btn">Login</button>
+  </form>
+</div>
+
+<%- include('partials-footer') %>
